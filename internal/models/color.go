@@ -23,7 +23,7 @@ func NewColor(red, green, blue int) *Color {
 // Parse a hex string to a Color (e.g., '#ff00ff') -> (255, 0, 255))
 // Supported prefixes are `0x` and `#`.
 func ColorFromHexString(hexColor string) (*Color, error) {
-	color := strings.Trim(hexColor, " \n\t\r\t")
+	color := strings.Trim(hexColor, " \r\n\t")
 
 	length := len(color)
 	if strings.HasPrefix(color, "0x") {
