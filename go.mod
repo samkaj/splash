@@ -1,3 +1,3 @@
-module github.com/samkaj/splash
+module splash
 
 go 1.24.1
