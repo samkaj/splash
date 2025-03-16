@@ -1,4 +1,6 @@
-# splash!
+# splash! 
+
+[![codecov](https://codecov.io/gh/samkaj/splash/graph/badge.svg?token=BJBZN4QZDW)](https://codecov.io/gh/samkaj/splash)
 
 A parser/serializer-tool for converting your Base16 color palettes between programs.
 
