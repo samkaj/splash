@@ -11,7 +11,6 @@ type Color struct {
 	Blue  int
 }
 
-// Create a new Color based on RGB components
 func NewColor(red, green, blue int) *Color {
 	return &Color{
 		Red:   red,
@@ -20,8 +19,6 @@ func NewColor(red, green, blue int) *Color {
 	}
 }
 
-// Parse a hex string to a Color (e.g., '#ff00ff') -> (255, 0, 255))
-// Supported prefixes are `0x` and `#`.
 func ColorFromHexString(hexColor string) (*Color, error) {
 	color := strings.Trim(hexColor, " \r\n\t")
 
