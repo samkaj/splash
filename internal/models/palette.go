@@ -30,6 +30,101 @@ type Base16Builder struct {
 	err     error
 }
 
+func NewPaletteBuilder() *Base16Builder {
+	pal := newPalette()
+	return &Base16Builder{
+		palette: *pal,
+		convert: ColorFromHexString,
+	}
+}
+
+func (b *Base16Builder) Build() (*Base16Palette, error) {
+	if err := b.validate(); err != nil {
+		return nil, err
+	}
+
+	return &b.palette, nil
+}
+
+func (b *Base16Builder) setColor(field **Color, value string) *Base16Builder {
+	if b.err != nil {
+		return b
+	}
+
+	color, err := b.convert(value)
+	if err != nil {
+		b.err = err
+		return b
+	}
+
+	*field = color
+	return b
+}
+
+func (b *Base16Builder) Base00(value string) *Base16Builder {
+	return b.setColor(&b.palette.b00, value)
+}
+
+func (b *Base16Builder) Base01(value string) *Base16Builder {
+	return b.setColor(&b.palette.b01, value)
+}
+
+func (b *Base16Builder) Base02(value string) *Base16Builder {
+	return b.setColor(&b.palette.b02, value)
+}
+
+func (b *Base16Builder) Base03(value string) *Base16Builder {
+	return b.setColor(&b.palette.b03, value)
+}
+
+func (b *Base16Builder) Base04(value string) *Base16Builder {
+	return b.setColor(&b.palette.b04, value)
+}
+
+func (b *Base16Builder) Base05(value string) *Base16Builder {
+	return b.setColor(&b.palette.b05, value)
+}
+
+func (b *Base16Builder) Base06(value string) *Base16Builder {
+	return b.setColor(&b.palette.b06, value)
+}
+
+func (b *Base16Builder) Base07(value string) *Base16Builder {
+	return b.setColor(&b.palette.b07, value)
+}
+
+func (b *Base16Builder) Base08(value string) *Base16Builder {
+	return b.setColor(&b.palette.b08, value)
+}
+
+func (b *Base16Builder) Base09(value string) *Base16Builder {
+	return b.setColor(&b.palette.b09, value)
+}
+
+func (b *Base16Builder) Base0a(value string) *Base16Builder {
+	return b.setColor(&b.palette.b0a, value)
+}
+
+func (b *Base16Builder) Base0b(value string) *Base16Builder {
+	return b.setColor(&b.palette.b0b, value)
+}
+
+func (b *Base16Builder) Base0c(value string) *Base16Builder {
+	return b.setColor(&b.palette.b0c, value)
+}
+
+func (b *Base16Builder) Base0d(value string) *Base16Builder {
+	return b.setColor(&b.palette.b0d, value)
+}
+
+func (b *Base16Builder) Base0e(value string) *Base16Builder {
+	return b.setColor(&b.palette.b0e, value)
+}
+
+func (b *Base16Builder) Base0f(value string) *Base16Builder {
+	return b.setColor(&b.palette.b0f, value)
+}
+
 func newPalette() *Base16Palette {
 	return &Base16Palette{
 		b00: nil,
@@ -49,21 +144,6 @@ func newPalette() *Base16Palette {
 		b0e: nil,
 		b0f: nil,
 	}
-}
-
-func NewPaletteBuilder() *Base16Builder {
-	return &Base16Builder{
-		palette: *newPalette(),
-		convert: ColorFromHexString,
-	}
-}
-
-func (b *Base16Builder) Build() (*Base16Palette, error) {
-	if err := b.validate(); err != nil {
-		return nil, err
-	}
-
-	return &b.palette, nil
 }
 
 func (b *Base16Builder) validate() error {
@@ -143,83 +223,4 @@ func (b *Base16Builder) validate() error {
 	}
 
 	return nil
-}
-
-func (b *Base16Builder) setColor(field *Color, value string) *Base16Builder {
-	if b.err != nil {
-		return b
-	}
-
-	color, err := b.convert(value)
-	if err != nil {
-		b.err = err
-		return b
-	}
-
-	field = color
-	return b
-}
-
-func (b *Base16Builder) Base00(value string) *Base16Builder {
-	return b.setColor(b.palette.b00, value)
-}
-
-func (b *Base16Builder) Base01(value string) *Base16Builder {
-	return b.setColor(b.palette.b01, value)
-}
-
-func (b *Base16Builder) Base02(value string) *Base16Builder {
-	return b.setColor(b.palette.b02, value)
-}
-
-func (b *Base16Builder) Base03(value string) *Base16Builder {
-	return b.setColor(b.palette.b03, value)
-}
-
-func (b *Base16Builder) Base04(value string) *Base16Builder {
-	return b.setColor(b.palette.b04, value)
-}
-
-func (b *Base16Builder) Base05(value string) *Base16Builder {
-	return b.setColor(b.palette.b05, value)
-}
-
-func (b *Base16Builder) Base06(value string) *Base16Builder {
-	return b.setColor(b.palette.b06, value)
-}
-
-func (b *Base16Builder) Base07(value string) *Base16Builder {
-	return b.setColor(b.palette.b07, value)
-}
-
-func (b *Base16Builder) Base08(value string) *Base16Builder {
-	return b.setColor(b.palette.b08, value)
-}
-
-func (b *Base16Builder) Base09(value string) *Base16Builder {
-	return b.setColor(b.palette.b09, value)
-}
-
-func (b *Base16Builder) Base0a(value string) *Base16Builder {
-	return b.setColor(b.palette.b0a, value)
-}
-
-func (b *Base16Builder) Base0b(value string) *Base16Builder {
-	return b.setColor(b.palette.b0b, value)
-}
-
-func (b *Base16Builder) Base0c(value string) *Base16Builder {
-	return b.setColor(b.palette.b0c, value)
-}
-
-func (b *Base16Builder) Base0d(value string) *Base16Builder {
-	return b.setColor(b.palette.b0d, value)
-}
-
-func (b *Base16Builder) Base0e(value string) *Base16Builder {
-	return b.setColor(b.palette.b0e, value)
-}
-
-func (b *Base16Builder) Base0f(value string) *Base16Builder {
-	return b.setColor(b.palette.b0f, value)
 }
