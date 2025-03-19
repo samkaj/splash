@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"splash/internal/models"
 )
 
 func main() {
@@ -13,10 +14,15 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	_, err := readFile(*inputFilePath)
+	jsonPalette, err := readFile(*inputFilePath)
 	if err != nil {
 		fail(err.Error())
 	}
+
+    _, err = models.PaletteFromJson(jsonPalette)
+    if err != nil {
+        fail(err.Error())
+    }
 
 	outputFormats := flag.Args()
 	if len(outputFormats) < 1 {
