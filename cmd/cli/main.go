@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"splash/internal/generators"
 	"splash/internal/models"
 )
 
@@ -19,14 +20,28 @@ func main() {
 		fail(err.Error())
 	}
 
-    _, err = models.PaletteFromJson(jsonPalette)
-    if err != nil {
-        fail(err.Error())
-    }
+	palette, err := models.PaletteFromJson(jsonPalette)
+	if err != nil {
+		fail(err.Error())
+	}
 
 	outputFormats := flag.Args()
 	if len(outputFormats) < 1 {
 		fail(ErrNoFormatsProvided.Error())
+	}
+
+	generators := make([]generators.Generator, 0)
+	for _, format := range outputFormats {
+		gen, err := getGenerator(format)
+		if err != nil {
+			fail(err.Error())
+		}
+
+		generators = append(generators, *gen)
+	}
+
+	for _, generator := range generators {
+		fmt.Println(string(generator.Generate(palette)))
 	}
 }
 
@@ -50,6 +65,19 @@ func readFile(path string) ([]byte, error) {
 	}
 
 	return json, nil
+}
+
+func getGenerator(format string) (*generators.Generator, error) {
+	var generator generators.Generator
+	var err error
+	switch {
+	case format == "nvim":
+		generator = &generators.NvimGenerator{}
+	default:
+		err = ErrUnsupportedFormat(format)
+	}
+
+	return &generator, err
 }
 
 func usage() {
@@ -78,4 +106,8 @@ func ErrFailedToReadFile(path string) error {
 
 var ErrEmptyStdin = errors.New("failed to read from stdin")
 
-var ErrNoFormatsProvided = errors.New("no formates provided")
+var ErrNoFormatsProvided = errors.New("no formats provided")
+
+func ErrUnsupportedFormat(format string) error {
+	return fmt.Errorf("unsupported format '%s'", format)
+}
