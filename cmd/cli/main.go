@@ -40,8 +40,18 @@ func main() {
 		generators = append(generators, *gen)
 	}
 
-	for _, generator := range generators {
-		fmt.Println(string(generator.Generate(palette)))
+	fileName := "splash"
+	for idx, generator := range generators {
+		contents := generator.Generate(palette)
+		ext, err := getFileExtension(outputFormats[idx])
+		if err != nil {
+			fail(err.Error())
+		}
+
+		err = writeToFile(fileName+ext, contents)
+		if err != nil {
+			fail(err.Error())
+		}
 	}
 }
 
@@ -67,6 +77,10 @@ func readFile(path string) ([]byte, error) {
 	return json, nil
 }
 
+func writeToFile(name string, data []byte) error {
+	return os.WriteFile(name, data, 0644)
+}
+
 func getGenerator(format string) (*generators.Generator, error) {
 	var generator generators.Generator
 	var err error
@@ -78,6 +92,19 @@ func getGenerator(format string) (*generators.Generator, error) {
 	}
 
 	return &generator, err
+}
+
+func getFileExtension(format string) (string, error) {
+	var extension string
+	var err error
+	switch {
+	case format == "nvim":
+		extension = ".lua"
+	default:
+		err = ErrUnsupportedFormat(format)
+	}
+
+	return extension, err
 }
 
 func usage() {

@@ -15,8 +15,7 @@ require('base16-colorscheme').setup({
     base04 = '%s', base05 = '%s', base06 = '%s', base07 = '%s',
     base08 = '%s', base09 = '%s', base0A = '%s', base0B = '%s',
     base0C = '%s', base0D = '%s', base0E = '%s', base0F = '%s',
-})
-    `,
+})`,
 		p.B00.ToHexString(),
 		p.B01.ToHexString(),
 		p.B02.ToHexString(),
