@@ -41,6 +41,7 @@ func main() {
 	}
 
 	fileName := "splash"
+    filesCreated := make([]string, 0)
 	for idx, generator := range generators {
 		contents := generator.Generate(palette)
 		ext, err := getFileExtension(outputFormats[idx])
@@ -48,11 +49,19 @@ func main() {
 			fail(err.Error())
 		}
 
-		err = writeToFile(fileName+ext, contents)
+        name := fileName+ext
+		err = writeToFile(name, contents)
 		if err != nil {
 			fail(err.Error())
 		}
+
+        filesCreated = append(filesCreated, name)
 	}
+
+    fmt.Fprintf(os.Stderr, "splash generated %d files:\n", len(filesCreated))
+    for _, name := range filesCreated {
+        fmt.Fprintf(os.Stderr, "- %s\n", name)
+    }
 }
 
 func readStdin() ([]byte, error) {
