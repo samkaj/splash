@@ -100,6 +100,8 @@ func getGenerator(format string) (*generators.Generator, error) {
 		generator = &generators.GhosttyGenerator{}
 	case format == "helix":
 		generator = &generators.HelixGenerator{}
+	case format == "alacritty":
+		generator = &generators.AlacrittyGenerator{}
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -117,6 +119,8 @@ func getFileExtension(format string) (string, error) {
 		extension = "-ghostty.conf"
 	case format == "helix":
 		extension = "-helix.toml"
+	case format == "alacritty":
+		extension = "-alacritty.toml"
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
