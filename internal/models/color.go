@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -9,6 +10,10 @@ type Color struct {
 	Red   int
 	Green int
 	Blue  int
+}
+
+func (c *Color) ToHexString() string {
+	return fmt.Sprintf("#%x%x%x", c.Red, c.Green, c.Blue)
 }
 
 func NewColor(red, green, blue int) *Color {
