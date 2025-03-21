@@ -89,6 +89,8 @@ func getGenerator(format string) (*generators.Generator, error) {
 		generator = &generators.NvimGenerator{}
 	case format == "ghostty":
 		generator = &generators.GhosttyGenerator{}
+	case format == "helix":
+		generator = &generators.HelixGenerator{}
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -104,6 +106,8 @@ func getFileExtension(format string) (string, error) {
 		extension = "-nvim.lua"
 	case format == "ghostty":
 		extension = "-ghostty.conf"
+	case format == "helix":
+		extension = "-helix.toml"
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
