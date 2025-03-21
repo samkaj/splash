@@ -10,7 +10,7 @@ import (
 func TestHexConversionInverse(t *testing.T) {
 	color := &models.Color{Red: 255, Green: 255, Blue: 255}
 	colorString := "#ffffff"
-	result := color.HexStringFromColor()
+	result := color.ToHexString()
 	if !reflect.DeepEqual(colorString, result) {
 		t.Errorf("color -> hex is not working, %v != %v", result, colorString)
 	}
