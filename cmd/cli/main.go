@@ -87,6 +87,8 @@ func getGenerator(format string) (*generators.Generator, error) {
 	switch {
 	case format == "nvim":
 		generator = &generators.NvimGenerator{}
+	case format == "ghostty":
+		generator = &generators.GhosttyGenerator{}
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -99,7 +101,9 @@ func getFileExtension(format string) (string, error) {
 	var err error
 	switch {
 	case format == "nvim":
-		extension = ".lua"
+		extension = "-nvim.lua"
+	case format == "ghostty":
+		extension = "-ghostty.conf"
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -114,7 +118,7 @@ USAGE:
     splash [OPTIONS] FORMAT [FORMAT ...]
 
 POSITIONAL ARGUMENTS:
-    <FORMAT>...  Output formats. Supported formats: [ nvim ]
+    <FORMAT>...  Output formats. Supported formats: [ nvim, ghostty, helix ]
 
 OPTIONS:
     -i  JSON-file containing the palette. When omitted, stdin is used.
