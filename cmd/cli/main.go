@@ -114,7 +114,7 @@ USAGE:
     splash [OPTIONS] FORMAT [FORMAT ...]
 
 POSITIONAL ARGUMENTS:
-    <FORMAT>...  Output formats. Supported formats: []
+    <FORMAT>...  Output formats. Supported formats: [ nvim ]
 
 OPTIONS:
     -i  JSON-file containing the palette. When omitted, stdin is used.

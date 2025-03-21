@@ -12,8 +12,9 @@ type Color struct {
 	Blue  int
 }
 
-func (c *Color) ToHexString() string {
-	return fmt.Sprintf("#%x%x%x", c.Red, c.Green, c.Blue)
+func (c *Color) ToHex() string {
+	s := fmt.Sprintf("#%02x%02x%02x", c.Red, c.Green, c.Blue)
+	return s
 }
 
 func NewColor(red, green, blue int) *Color {
