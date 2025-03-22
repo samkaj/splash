@@ -41,6 +41,7 @@ func main() {
 	}
 
 	fileName := "splash"
+	filesCreated := make([]string, 0)
 	for idx, generator := range generators {
 		contents := generator.Generate(palette)
 		ext, err := getFileExtension(outputFormats[idx])
@@ -48,10 +49,18 @@ func main() {
 			fail(err.Error())
 		}
 
-		err = writeToFile(fileName+ext, contents)
+		name := fileName + ext
+		err = writeToFile(name, contents)
 		if err != nil {
 			fail(err.Error())
 		}
+
+		filesCreated = append(filesCreated, name)
+	}
+
+	fmt.Fprintf(os.Stderr, "splash generated %d files:\n", len(filesCreated))
+	for _, name := range filesCreated {
+		fmt.Fprintf(os.Stderr, "- %s\n", name)
 	}
 }
 
@@ -87,6 +96,14 @@ func getGenerator(format string) (*generators.Generator, error) {
 	switch {
 	case format == "nvim":
 		generator = &generators.NvimGenerator{}
+	case format == "ghostty":
+		generator = &generators.GhosttyGenerator{}
+	case format == "helix":
+		generator = &generators.HelixGenerator{}
+	case format == "alacritty":
+		generator = &generators.AlacrittyGenerator{}
+	case format == "kitty":
+		generator = &generators.KittyGenerator{}
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -99,7 +116,15 @@ func getFileExtension(format string) (string, error) {
 	var err error
 	switch {
 	case format == "nvim":
-		extension = ".lua"
+		extension = "-nvim.lua"
+	case format == "ghostty":
+		extension = "-ghostty.conf"
+	case format == "helix":
+		extension = "-helix.toml"
+	case format == "alacritty":
+		extension = "-alacritty.toml"
+	case format == "kitty":
+		extension = "-kitty.conf"
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -114,7 +139,7 @@ USAGE:
     splash [OPTIONS] FORMAT [FORMAT ...]
 
 POSITIONAL ARGUMENTS:
-    <FORMAT>...  Output formats. Supported formats: []
+    <FORMAT>...  Output formats. Supported formats: [ nvim, ghostty, helix, alacritty, kitty ]
 
 OPTIONS:
     -i  JSON-file containing the palette. When omitted, stdin is used.
