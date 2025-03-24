@@ -4,9 +4,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io"
 	"os"
 	"splash/internal/generators"
+	"splash/internal/io"
 	"splash/internal/models"
 )
 
@@ -15,7 +15,7 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	jsonPalette, err := readFile(*inputFilePath)
+	jsonPalette, err := io.ReadFile(*inputFilePath)
 	if err != nil {
 		fail(err.Error())
 	}
@@ -50,7 +50,7 @@ func main() {
 		}
 
 		name := fileName + ext
-		err = writeToFile(name, contents)
+		err = io.WriteToFile(name, contents)
 		if err != nil {
 			fail(err.Error())
 		}
@@ -62,32 +62,6 @@ func main() {
 	for _, name := range filesCreated {
 		fmt.Fprintf(os.Stderr, "- %s\n", name)
 	}
-}
-
-func readStdin() ([]byte, error) {
-	json, err := io.ReadAll(os.Stdin)
-	if err != nil {
-		return nil, ErrEmptyStdin
-	}
-
-	return json, nil
-}
-
-func readFile(path string) ([]byte, error) {
-	if path == "" {
-		return readStdin()
-	}
-
-	json, err := os.ReadFile(path)
-	if err != nil {
-		return nil, ErrFailedToReadFile(path)
-	}
-
-	return json, nil
-}
-
-func writeToFile(name string, data []byte) error {
-	return os.WriteFile(name, data, 0644)
 }
 
 func getGenerator(format string) (*generators.Generator, error) {
@@ -151,12 +125,6 @@ func fail(message string) {
 	fmt.Fprintf(os.Stderr, "splash: %s. run with -h for usage.\n", message)
 	os.Exit(1)
 }
-
-func ErrFailedToReadFile(path string) error {
-	return fmt.Errorf("failed to read file '%s'", path)
-}
-
-var ErrEmptyStdin = errors.New("failed to read from stdin")
 
 var ErrNoFormatsProvided = errors.New("no formats provided")
 
