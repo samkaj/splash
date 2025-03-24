@@ -6,12 +6,16 @@ import (
 )
 
 func ReadStdin() ([]byte, error) {
-	json, err := io.ReadAll(os.Stdin)
+	contents, err := io.ReadAll(os.Stdin)
 	if err != nil {
+		return nil, ErrIoFailure
+	}
+
+	if len(contents) <= 0 {
 		return nil, ErrEmptyStdin
 	}
 
-	return json, nil
+	return contents, nil
 }
 
 func WriteToFile(path string, contents []byte) error {
@@ -20,7 +24,7 @@ func WriteToFile(path string, contents []byte) error {
 
 func ReadFile(path string) ([]byte, error) {
 	if path == "" {
-        return nil, ErrEmptyPath
+		return nil, ErrEmptyPath
 	}
 
 	json, err := os.ReadFile(path)
