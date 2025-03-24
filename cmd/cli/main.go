@@ -4,9 +4,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io"
 	"os"
 	"splash/internal/generators"
+	"splash/internal/io"
 	"splash/internal/models"
 )
 
@@ -15,7 +15,7 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	jsonPalette, err := readFile(*inputFilePath)
+	jsonPalette, err := io.ReadFile(*inputFilePath)
 	if err != nil {
 		fail(err.Error())
 	}
@@ -41,6 +41,7 @@ func main() {
 	}
 
 	fileName := "splash"
+	filesCreated := make([]string, 0)
 	for idx, generator := range generators {
 		contents := generator.Generate(palette)
 		ext, err := getFileExtension(outputFormats[idx])
@@ -48,37 +49,19 @@ func main() {
 			fail(err.Error())
 		}
 
-		err = writeToFile(fileName+ext, contents)
+		name := fileName + ext
+		err = io.WriteToFile(name, contents)
 		if err != nil {
 			fail(err.Error())
 		}
-	}
-}
 
-func readStdin() ([]byte, error) {
-	json, err := io.ReadAll(os.Stdin)
-	if err != nil {
-		return nil, ErrEmptyStdin
+		filesCreated = append(filesCreated, name)
 	}
 
-	return json, nil
-}
-
-func readFile(path string) ([]byte, error) {
-	if path == "" {
-		return readStdin()
+	fmt.Fprintf(os.Stderr, "splash generated %d files:\n", len(filesCreated))
+	for _, name := range filesCreated {
+		fmt.Fprintf(os.Stderr, "- %s\n", name)
 	}
-
-	json, err := os.ReadFile(path)
-	if err != nil {
-		return nil, ErrFailedToReadFile(path)
-	}
-
-	return json, nil
-}
-
-func writeToFile(name string, data []byte) error {
-	return os.WriteFile(name, data, 0644)
 }
 
 func getGenerator(format string) (*generators.Generator, error) {
@@ -87,6 +70,14 @@ func getGenerator(format string) (*generators.Generator, error) {
 	switch {
 	case format == "nvim":
 		generator = &generators.NvimGenerator{}
+	case format == "ghostty":
+		generator = &generators.GhosttyGenerator{}
+	case format == "helix":
+		generator = &generators.HelixGenerator{}
+	case format == "alacritty":
+		generator = &generators.AlacrittyGenerator{}
+	case format == "kitty":
+		generator = &generators.KittyGenerator{}
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -99,7 +90,15 @@ func getFileExtension(format string) (string, error) {
 	var err error
 	switch {
 	case format == "nvim":
-		extension = ".lua"
+		extension = "-nvim.lua"
+	case format == "ghostty":
+		extension = "-ghostty.conf"
+	case format == "helix":
+		extension = "-helix.toml"
+	case format == "alacritty":
+		extension = "-alacritty.toml"
+	case format == "kitty":
+		extension = "-kitty.conf"
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -114,7 +113,7 @@ USAGE:
     splash [OPTIONS] FORMAT [FORMAT ...]
 
 POSITIONAL ARGUMENTS:
-    <FORMAT>...  Output formats. Supported formats: []
+    <FORMAT>...  Output formats. Supported formats: [ nvim, ghostty, helix, alacritty, kitty ]
 
 OPTIONS:
     -i  JSON-file containing the palette. When omitted, stdin is used.
@@ -126,12 +125,6 @@ func fail(message string) {
 	fmt.Fprintf(os.Stderr, "splash: %s. run with -h for usage.\n", message)
 	os.Exit(1)
 }
-
-func ErrFailedToReadFile(path string) error {
-	return fmt.Errorf("failed to read file '%s'", path)
-}
-
-var ErrEmptyStdin = errors.New("failed to read from stdin")
 
 var ErrNoFormatsProvided = errors.New("no formats provided")
 
