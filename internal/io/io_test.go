@@ -38,7 +38,7 @@ func TestReadNonExistentPath(t *testing.T) {
 func TestWriteToFile(t *testing.T) {
 	dir := os.TempDir()
 	contents := "foo"
-	path := dir + "splash-test"
+	path := dir + "/splash-test"
 	err := io.WriteToFile(path, []byte(contents))
 	if !errors.Is(err, nil) {
 		t.Errorf("writing to file should not fail, but got: %v", err)
