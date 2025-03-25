@@ -15,7 +15,13 @@ func main() {
 	flag.Usage = usage
 	flag.Parse()
 
-	jsonPalette, err := io.ReadFile(*inputFilePath)
+	var jsonPalette []byte
+	var err error
+	if *inputFilePath != "" {
+		jsonPalette, err = io.ReadFile(*inputFilePath)
+	} else {
+		jsonPalette, err = io.ReadStdin()
+	}
 	if err != nil {
 		fail(err.Error())
 	}
