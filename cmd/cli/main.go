@@ -84,6 +84,8 @@ func getGenerator(format string) (*generators.Generator, error) {
 		generator = &generators.AlacrittyGenerator{}
 	case format == "kitty":
 		generator = &generators.KittyGenerator{}
+	case format == "wezterm":
+		generator = &generators.WeztermGenerator{}
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -105,6 +107,8 @@ func getFileExtension(format string) (string, error) {
 		extension = "-alacritty.toml"
 	case format == "kitty":
 		extension = "-kitty.conf"
+	case format == "wezterm":
+		extension = "-wezterm.toml"
 	default:
 		err = ErrUnsupportedFormat(format)
 	}
@@ -119,7 +123,7 @@ USAGE:
     splash [OPTIONS] FORMAT [FORMAT ...]
 
 POSITIONAL ARGUMENTS:
-    <FORMAT>...  Output formats. Supported formats: [ nvim, ghostty, helix, alacritty, kitty ]
+    <FORMAT>...  Output formats. Supported formats: [ nvim, ghostty, helix, alacritty, kitty, wezterm ]
 
 OPTIONS:
     -i  JSON-file containing the palette. When omitted, stdin is used.
